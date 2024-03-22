@@ -38,11 +38,11 @@ model Release {
   platform String
   releaseType String
   buildType String
-  file File @relation(fields: [fileId], references: [id])
+  file File @relation("Files", fields: [fileId], references: [id])
   fileId Int
-  icon File @relation(fields: [iconId], references: [id])
+  icon File @relation("Icons", fields: [iconId], references: [id])
   iconId Int
-  symbol File @relation(fields: [symbolId], references: [id])
+  symbol File @relation("Symbols", fields: [symbolId], references: [id])
   symbolId Int
   application Application @relation(fields: [applicationId], references: [id])
   applicationId Int
