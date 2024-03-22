@@ -54,7 +54,7 @@ model Webhook {
   id Int @id @default(autoincrement())
   name String
   type String
-  template string
+  template String
   config Json
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
