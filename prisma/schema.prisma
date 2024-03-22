@@ -35,9 +35,9 @@ model Release {
   description String
   commitId String
   minimumPlatformVersion String
-  platform string
-  releaseType string
-  buildType string
+  platform String
+  releaseType String
+  buildType String
   file File @relation(fields: [fileId], references: [id])
   fileId Int
   icon File @relation(fields: [iconId], references: [id])
