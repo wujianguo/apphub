@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // Uses connection pooling
+  url = env("POSTGRES_PRISMA_URL")
+  // Uses direct connection, ⚠️ make sure to keep this to `POSTGRES_URL_NON_POOLING`
+  // or you'll have dangling databases from migrations
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Application {
+  id Int @id @default(autoincrement())
+  name String
+  slug String @unique
+  icon File @relation(fields: [iconId], references: [id])
+  iconId Int
+  webhook Webhook @relation(fields: [webhookId], references: [id])
+  webhookId Int
+  releases Release[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model Release {
+  id Int @id @default(autoincrement())
+  index Int
+  name String
+  fingerprint String
+  version String
+  shortVersion String
+  bundleIdentifier String
+  description String
+  commitId String
+  minimumPlatformVersion String
+  platform string
+  releaseType string
+  buildType string
+  file File @relation(fields: [fileId], references: [id])
+  fileId Int
+  icon File @relation(fields: [iconId], references: [id])
+  iconId Int
+  symbol File @relation(fields: [symbolId], references: [id])
+  symbolId Int
+  application Application @relation(fields: [applicationId], references: [id])
+  applicationId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model Webhook {
+  id Int @id @default(autoincrement())
+  name String
+  type String
+  template string
+  config Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model File {
+  id Int @id @default(autoincrement())
+  name String
+  path String
+  size Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
