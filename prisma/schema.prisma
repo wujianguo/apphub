@@ -15,7 +15,7 @@ model Application {
   id Int @id @default(autoincrement())
   name String
   slug String @unique
-  icon File @relation(fields: [iconId], references: [id])
+  icon File @relation("Logos", fields: [iconId], references: [id])
   iconId Int
   webhook Webhook @relation(fields: [webhookId], references: [id])
   webhookId Int
@@ -54,8 +54,8 @@ model Webhook {
   id Int @id @default(autoincrement())
   name String
   type String
-  template String
   config Json
+  applications Application[]
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }
@@ -65,6 +65,10 @@ model File {
   name String
   path String
   size Int
+  Logos Application[] @relation("Logos")
+  Files Release[] @relation("Files")
+  Icons Release[] @relation("Icons")
+  Symbols Release[] @relation("Symbols")
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }
