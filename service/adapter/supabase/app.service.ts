@@ -41,9 +41,11 @@ export class AppManagerService implements AppManagerInterface {
         },
         webhook: {
           create: {
-            name: `https://www.apphub.work/api/webhooks/${app.slug}`,
+            name: `url`,
             type: "url",
-            config: {}
+            config: {
+              url: `https://www.apphub.work/api/webhooks/${app.slug}`
+            }
           }
         }
       }
