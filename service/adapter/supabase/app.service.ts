@@ -4,6 +4,7 @@ import { AppManagerInterface, Pagination } from "../../interface";
 import { AppModel } from "../../model";
 import { JSONValue } from "../core";
 import { ObjectCreateResponseSchema, ObjectUpdateResponseSchema, RequestService } from "./request.service";
+import prisma from "@/lib/prisma";
 
 export const AppSupabaseSchema = AppCreateSchema.extend({
   id: z.number(),
@@ -25,6 +26,46 @@ export class AppManagerService implements AppManagerInterface {
   }
 
   async createApp(app: AppCreateDto): Promise<AppModel> {
+    const icon = "https://ovgzsknjpyioppdpfnrt.supabase.co/storage/v1/object/public/apphub/apps/google/google.webp";
+
+    const data = await prisma.application.create({
+      data: {
+        name: app.name,
+        slug: app.slug,
+        icon: {
+          create: {
+            name: "google.webp",
+            path: icon,
+            size: 3858,
+          },
+        },
+        webhook: {
+          create: {
+            name: `https://www.apphub.work/api/webhooks/${app.slug}`,
+            type: "url",
+            config: {}
+          }
+        }
+      }
+    });
+    const model = new AppModel();
+    model.name = data.name;
+    model.slug = data.slug;
+    model.icon = icon;
+    model.createdAt = data.createdAt;
+    model.updatedAt = data.updatedAt;
+    return model;
+    // const resp = await this.request.post(`/rest/v1/${AppModel.tableName}`, app);
+    // const data = ObjectCreateResponseSchema.parse(resp.json);
+    // const model = new AppModel();
+    // model.fullfill(app);
+    // model.id = data.id.toString();
+    // model.createdAt = new Date(data.createdAt);
+    // model.updatedAt = new Date(data.createdAt);
+    // return model;
+  }
+
+  async createApp2(app: AppCreateDto): Promise<AppModel> {
     const resp = await this.request.post(`/rest/v1/${AppModel.tableName}`, app);
     const data = ObjectCreateResponseSchema.parse(resp.json);
     const model = new AppModel();
@@ -95,6 +136,6 @@ export class AppManagerService implements AppManagerInterface {
   }
 
   async setWebhook(slug: string, webhook: WebhookCreateDto): Promise<void> {
-    const app = await this.getAppBySlug(slug);    
+    const app = await this.getAppBySlug(slug);
   }
 }
