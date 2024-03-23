@@ -8,6 +8,10 @@ import {
   ReleaseService as SupabaseReleaseService,
   RequestService as SupabaseRequestService
 } from "./adapter/supabase";
+import {
+  AppManagerService as PrismaAppManagerService,
+  ReleaseService as PrismaReleaseService
+} from "./adapter/prisma";
 import { AppManagerInterface, ReleaseInterface } from "./interface";
 import { AppModel } from "./model";
 
@@ -20,6 +24,8 @@ class Service {
     } else if (process.env.DATABASE === "supabase") {
       const request = new SupabaseRequestService();
       this.appManager = new SupabaseAppManagerService(request);
+    } else if (process.env.DATABASE === "prisma") {
+      this.appManager = new PrismaAppManagerService();
     } else {
       throw "Database not found";
     }

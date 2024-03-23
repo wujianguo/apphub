@@ -3,72 +3,72 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
   // Uses connection pooling
-  url = env("POSTGRES_PRISMA_URL")
+  url       = env("POSTGRES_PRISMA_URL")
   // Uses direct connection, ⚠️ make sure to keep this to `POSTGRES_URL_NON_POOLING`
   // or you'll have dangling databases from migrations
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model Application {
-  id Int @id @default(autoincrement())
-  name String
-  slug String @unique
-  icon File @relation("Logos", fields: [iconId], references: [id])
-  iconId Int
-  webhook Webhook @relation(fields: [webhookId], references: [id])
+  id        Int       @id @default(autoincrement())
+  name      String
+  slug      String    @unique
+  icon      File      @relation("Logos", fields: [iconId], references: [id])
+  iconId    Int
+  webhook   Webhook   @relation(fields: [webhookId], references: [id])
   webhookId Int
-  releases Release[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  releases  Release[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
 }
 
 model Release {
-  id Int @id @default(autoincrement())
-  index Int
-  name String
-  fingerprint String
-  version String
-  shortVersion String
-  bundleIdentifier String
-  description String
-  commitId String
+  id                     Int         @id @default(autoincrement())
+  index                  Int
+  name                   String
+  fingerprint            String
+  version                String
+  shortVersion           String
+  bundleIdentifier       String
+  description            String
+  commitId               String
   minimumPlatformVersion String
-  platform String
-  releaseType String
-  buildType String
-  file File @relation("Files", fields: [fileId], references: [id])
-  fileId Int
-  icon File @relation("Icons", fields: [iconId], references: [id])
-  iconId Int
-  symbol File @relation("Symbols", fields: [symbolId], references: [id])
-  symbolId Int
-  application Application @relation(fields: [applicationId], references: [id])
-  applicationId Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  platform               String
+  releaseType            String
+  buildType              String
+  file                   File        @relation("Files", fields: [fileId], references: [id])
+  fileId                 Int
+  icon                   File        @relation("Icons", fields: [iconId], references: [id])
+  iconId                 Int
+  symbol                 File        @relation("Symbols", fields: [symbolId], references: [id])
+  symbolId               Int
+  application            Application @relation(fields: [applicationId], references: [id])
+  applicationId          Int
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @default(now())
 }
 
 model Webhook {
-  id Int @id @default(autoincrement())
-  name String
-  type String
-  config Json
+  id           Int           @id @default(autoincrement())
+  name         String
+  type         String
+  config       Json
   applications Application[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now())
 }
 
 model File {
-  id Int @id @default(autoincrement())
-  name String
-  path String
-  size Int
-  Logos Application[] @relation("Logos")
-  Files Release[] @relation("Files")
-  Icons Release[] @relation("Icons")
-  Symbols Release[] @relation("Symbols")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  id        Int           @id @default(autoincrement())
+  name      String
+  path      String
+  size      Int
+  Logos     Application[] @relation("Logos")
+  Files     Release[]     @relation("Files")
+  Icons     Release[]     @relation("Icons")
+  Symbols   Release[]     @relation("Symbols")
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @default(now())
 }
