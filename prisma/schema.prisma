@@ -15,10 +15,10 @@ model Application {
   id        Int       @id @default(autoincrement())
   name      String
   slug      String    @unique
-  icon      File      @relation("Logos", fields: [iconId], references: [id])
-  iconId    Int
-  webhook   Webhook   @relation(fields: [webhookId], references: [id])
-  webhookId Int
+  icon      File?     @relation("Logos", fields: [iconId], references: [id], onDelete: SetNull)
+  iconId    Int?
+  webhook   Webhook?  @relation(fields: [webhookId], references: [id], onDelete: SetNull)
+  webhookId Int?
   releases  Release[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now())
@@ -35,16 +35,16 @@ model Release {
   description            String
   commitId               String
   minimumPlatformVersion String
-  platform               String
-  releaseType            String
-  buildType              String
-  file                   File        @relation("Files", fields: [fileId], references: [id])
+  platform               PlatformType
+  releaseType            ReleaseType
+  buildType              BuildType
+  file                   File        @relation("Files", fields: [fileId], references: [id], onDelete: Cascade)
   fileId                 Int
-  icon                   File        @relation("Icons", fields: [iconId], references: [id])
-  iconId                 Int
-  symbol                 File        @relation("Symbols", fields: [symbolId], references: [id])
-  symbolId               Int
-  application            Application @relation(fields: [applicationId], references: [id])
+  icon                   File?       @relation("Icons", fields: [iconId], references: [id], onDelete: SetNull)
+  iconId                 Int?
+  symbol                 File?       @relation("Symbols", fields: [symbolId], references: [id], onDelete: SetNull)
+  symbolId               Int?
+  application            Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
   applicationId          Int
   createdAt              DateTime    @default(now())
   updatedAt              DateTime    @default(now())
@@ -71,4 +71,25 @@ model File {
   Symbols   Release[]     @relation("Symbols")
   createdAt DateTime      @default(now())
   updatedAt DateTime      @default(now())
+}
+
+enum PlatformType {
+  IOS
+  ANDROID
+  MACOS
+  TVOS
+  LINUX
+  WINDOWS
+}
+
+enum ReleaseType {
+  ALPHA
+  BETA
+  RC
+  RELEASE
+}
+
+enum BuildType {
+  DEBUG
+  RELEASE
 }

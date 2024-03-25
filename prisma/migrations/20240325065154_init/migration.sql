@@ -1,10 +1,19 @@
+-- CreateEnum
+CREATE TYPE "PlatformType" AS ENUM ('IOS', 'ANDROID', 'MACOS', 'TVOS', 'LINUX', 'WINDOWS');
+
+-- CreateEnum
+CREATE TYPE "ReleaseType" AS ENUM ('ALPHA', 'BETA', 'RC', 'RELEASE');
+
+-- CreateEnum
+CREATE TYPE "BuildType" AS ENUM ('DEBUG', 'RELEASE');
+
 -- CreateTable
 CREATE TABLE "Application" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
-    "iconId" INTEGER NOT NULL,
-    "webhookId" INTEGER NOT NULL,
+    "iconId" INTEGER,
+    "webhookId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -23,12 +32,12 @@ CREATE TABLE "Release" (
     "description" TEXT NOT NULL,
     "commitId" TEXT NOT NULL,
     "minimumPlatformVersion" TEXT NOT NULL,
-    "platform" TEXT NOT NULL,
-    "releaseType" TEXT NOT NULL,
-    "buildType" TEXT NOT NULL,
+    "platform" "PlatformType" NOT NULL,
+    "releaseType" "ReleaseType" NOT NULL,
+    "buildType" "BuildType" NOT NULL,
     "fileId" INTEGER NOT NULL,
-    "iconId" INTEGER NOT NULL,
-    "symbolId" INTEGER NOT NULL,
+    "iconId" INTEGER,
+    "symbolId" INTEGER,
     "applicationId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -64,19 +73,19 @@ CREATE TABLE "File" (
 CREATE UNIQUE INDEX "Application_slug_key" ON "Application"("slug");
 
 -- AddForeignKey
-ALTER TABLE "Application" ADD CONSTRAINT "Application_iconId_fkey" FOREIGN KEY ("iconId") REFERENCES "File"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Application" ADD CONSTRAINT "Application_iconId_fkey" FOREIGN KEY ("iconId") REFERENCES "File"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Application" ADD CONSTRAINT "Application_webhookId_fkey" FOREIGN KEY ("webhookId") REFERENCES "Webhook"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Application" ADD CONSTRAINT "Application_webhookId_fkey" FOREIGN KEY ("webhookId") REFERENCES "Webhook"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Release" ADD CONSTRAINT "Release_fileId_fkey" FOREIGN KEY ("fileId") REFERENCES "File"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Release" ADD CONSTRAINT "Release_fileId_fkey" FOREIGN KEY ("fileId") REFERENCES "File"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Release" ADD CONSTRAINT "Release_iconId_fkey" FOREIGN KEY ("iconId") REFERENCES "File"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Release" ADD CONSTRAINT "Release_iconId_fkey" FOREIGN KEY ("iconId") REFERENCES "File"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Release" ADD CONSTRAINT "Release_symbolId_fkey" FOREIGN KEY ("symbolId") REFERENCES "File"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Release" ADD CONSTRAINT "Release_symbolId_fkey" FOREIGN KEY ("symbolId") REFERENCES "File"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Release" ADD CONSTRAINT "Release_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "Application"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Release" ADD CONSTRAINT "Release_applicationId_fkey" FOREIGN KEY ("applicationId") REFERENCES "Application"("id") ON DELETE CASCADE ON UPDATE CASCADE;

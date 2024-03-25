@@ -26,34 +26,15 @@ export class AppManagerService implements AppManagerInterface {
   }
 
   async createApp(app: AppCreateDto): Promise<AppModel> {
-    const icon = "https://ovgzsknjpyioppdpfnrt.supabase.co/storage/v1/object/public/apphub/apps/google/google.webp";
-
     const data = await prisma.application.create({
       data: {
         name: app.name,
         slug: app.slug,
-        icon: {
-          create: {
-            name: "google.webp",
-            path: icon,
-            size: 3858,
-          },
-        },
-        webhook: {
-          create: {
-            name: `url`,
-            type: "url",
-            config: {
-              url: `https://www.apphub.work/api/webhooks/${app.slug}`
-            }
-          }
-        }
       }
     });
     const model = new AppModel();
     model.name = data.name;
     model.slug = data.slug;
-    model.icon = icon;
     model.createdAt = data.createdAt;
     model.updatedAt = data.updatedAt;
     return model;

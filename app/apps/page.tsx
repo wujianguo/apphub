@@ -16,7 +16,7 @@ export default async function IndexPage() {
                   <div className="container flex p-3 pl-1">
                     <Image
                       className="rounded-lg"
-                      src={app.icon ?? ""}
+                      src={app.icon ?? "https://iaig4gdjlh2p4lac.public.blob.vercel-storage.com/apps/sample-mdxnNe8P5q11lRyRwPoXai09kbOEnB.jpg"}
                       alt="Icon of the application"
                       width={64}
                       height={64}
