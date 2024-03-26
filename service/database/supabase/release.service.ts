@@ -1,6 +1,6 @@
 import { ReleaseInterface, Pagination } from "../../interface";
 import { ReleaseCreateDto } from "../../dto";
-import { Platform } from "../../core/enum";
+import { PlatformType } from "../../core/enum";
 import { RequestService } from "./request.service";
 import { AppModel, ReleaseModel } from "../../model";
 
@@ -14,7 +14,7 @@ export class ReleaseService implements ReleaseInterface {
     throw new Error("Method not implemented.");
   }
 
-  getReleaseList(page = 1, perPage = 10, platform?: Platform): Promise<Pagination<ReleaseModel>> {
+  getReleaseList(page = 1, perPage = 10, platform?: PlatformType): Promise<Pagination<ReleaseModel>> {
     throw new Error("Method not implemented.");
   }
 
@@ -22,7 +22,7 @@ export class ReleaseService implements ReleaseInterface {
     throw new Error("Method not implemented.");
   }
 
-  getLatest(tryPlatform: Platform): Promise<ReleaseModel> {
+  getLatest(tryPlatform: PlatformType): Promise<ReleaseModel> {
     throw new Error("Method not implemented.");
   }
 }
