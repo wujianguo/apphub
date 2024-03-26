@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { FileSchema } from "../core/file";
-import { BuildType, Platform, ReleaseType } from "../core/enum";
+import { BuildType, PlatformType, ReleaseType } from "../core/enum";
 
 export const ReleaseCreateSchema = z.object({
   name: z.string(),
@@ -11,7 +11,7 @@ export const ReleaseCreateSchema = z.object({
   description: z.string().default(''),
   commitId: z.string().default(''),
   minimumPlatformVersion: z.string().default(''),
-  platform: z.nativeEnum(Platform),
+  platform: z.nativeEnum(PlatformType),
   releaseType: z.nativeEnum(ReleaseType),
   buildType: z.nativeEnum(BuildType),
   file: FileSchema,

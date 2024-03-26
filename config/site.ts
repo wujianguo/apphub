@@ -6,6 +6,10 @@ export const siteConfig = {
     "A self-hosted service that helps you distribute Android, iOS, macOS, tvOS, Linux, Windows apps, you can release builds to testers and public app stores.",
   mainNav: [
     {
+      title: "UPLOAD",
+      href: "/upload",
+    },
+    {
       title: "UDID",
       href: "/udid",
     },

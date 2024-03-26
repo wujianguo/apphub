@@ -1,12 +1,3 @@
--- CreateEnum
-CREATE TYPE "PlatformType" AS ENUM ('IOS', 'ANDROID', 'MACOS', 'TVOS', 'LINUX', 'WINDOWS');
-
--- CreateEnum
-CREATE TYPE "ReleaseType" AS ENUM ('ALPHA', 'BETA', 'RC', 'RELEASE');
-
--- CreateEnum
-CREATE TYPE "BuildType" AS ENUM ('DEBUG', 'RELEASE');
-
 -- CreateTable
 CREATE TABLE "Application" (
     "id" SERIAL NOT NULL,
@@ -32,9 +23,9 @@ CREATE TABLE "Release" (
     "description" TEXT NOT NULL,
     "commitId" TEXT NOT NULL,
     "minimumPlatformVersion" TEXT NOT NULL,
-    "platform" "PlatformType" NOT NULL,
-    "releaseType" "ReleaseType" NOT NULL,
-    "buildType" "BuildType" NOT NULL,
+    "platformType" INTEGER NOT NULL,
+    "releaseType" INTEGER NOT NULL,
+    "buildType" INTEGER NOT NULL,
     "fileId" INTEGER NOT NULL,
     "iconId" INTEGER,
     "symbolId" INTEGER,
@@ -49,7 +40,7 @@ CREATE TABLE "Release" (
 CREATE TABLE "Webhook" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
+    "type" INTEGER NOT NULL,
     "config" JSONB NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -71,6 +62,9 @@ CREATE TABLE "File" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Application_slug_key" ON "Application"("slug");
+
+-- CreateIndex
+CREATE INDEX "application_index" ON "Release"("applicationId", "index", "platformType");
 
 -- AddForeignKey
 ALTER TABLE "Application" ADD CONSTRAINT "Application_iconId_fkey" FOREIGN KEY ("iconId") REFERENCES "File"("id") ON DELETE SET NULL ON UPDATE CASCADE;

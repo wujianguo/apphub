@@ -1,11 +1,10 @@
 import { ReleaseInterface, Pagination } from '../../interface';
 import { ReleaseCreateDto, WebhookCreateSchema } from '../../dto';
-import { Platform } from '../../core/enum';
+import { PlatformType } from '../../core/enum';
 import { JSONValue, NotFoundError } from "../core/response";
 import { AppModel, ReleaseModel } from '../../model';
-import { ObjectCreateResponseSchema, ObjectUpdateResponseSchema, RequestService } from './request.service';
+import { ObjectCreateResponseSchema, RequestService } from './request.service';
 import { ReleaseParseSchema } from './app.service';
-
 
 export class ReleaseService implements ReleaseInterface {
 
@@ -58,7 +57,7 @@ export class ReleaseService implements ReleaseInterface {
       .replaceAll('${bundleIdentifier}', release.bundleIdentifier)
       .replaceAll('${description}', release.description)
       .replaceAll('${commitId}', release.commitId)
-      .replaceAll('${platform}', release.platform)
+      .replaceAll('${platformType}', release.platformType)
       .replaceAll('${buildType}', release.buildType)
       .replaceAll('${file.name}', release.file.name)
       .replaceAll('${file.size}', release.file.size.toString())
@@ -109,11 +108,11 @@ export class ReleaseService implements ReleaseInterface {
     return model;
   }
 
-  async getReleaseList(page = 1, perPage = 10, platform?: Platform): Promise<Pagination<ReleaseModel>> {
+  async getReleaseList(page = 1, perPage = 10, platformType?: PlatformType): Promise<Pagination<ReleaseModel>> {
     const query = {
       order: '-createdAt',
       where: JSON.stringify({
-        platform: platform,
+        platformType: platformType,
         app: {
           '__type': 'Pointer',
           'className': AppModel.tableName,
@@ -151,7 +150,7 @@ export class ReleaseService implements ReleaseInterface {
     return this.toModel(array[0]);
   }
 
-  async getLatest(tryPlatform?: Platform): Promise<ReleaseModel> {
+  async getLatest(tryPlatform?: PlatformType): Promise<ReleaseModel> {
     const where: JSONValue = {
       app: {
         '__type': 'Pointer',
@@ -160,7 +159,7 @@ export class ReleaseService implements ReleaseInterface {
       }
     }
     if (tryPlatform) {
-      where.platform = tryPlatform;
+      where.platformType = tryPlatform;
       const query = {
         order: '-createdAt',
         where: JSON.stringify(where),

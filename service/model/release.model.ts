@@ -1,6 +1,6 @@
 import { ReleaseResponseDto } from "../dto";
 import { File } from "../core/file";
-import { BuildType, Platform, ReleaseType } from "../core/enum";
+import { BuildType, PlatformType, ReleaseType } from "../core/enum";
 
 export class ReleaseModel {
   static readonly tableName = "Release";
@@ -14,7 +14,7 @@ export class ReleaseModel {
   description = "";
   commitId = "";
   minimumPlatformVersion = "";
-  platform!: Platform;
+  platformType!: PlatformType;
   releaseType!: ReleaseType;
   buildType!: BuildType;
   file!: File;
@@ -49,7 +49,7 @@ export class ReleaseModel {
       description: this.description,
       commitId: this.commitId,
       minimumPlatformVersion: this.minimumPlatformVersion,
-      platform: this.platform,
+      platform: this.platformType,
       releaseType: this.releaseType,
       buildType: this.buildType,
       file: this.file,

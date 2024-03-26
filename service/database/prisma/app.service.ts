@@ -1,27 +1,41 @@
 import { z } from "zod";
+import prisma from "@/lib/prisma";
 import { AppCreateDto, AppCreateSchema, AppUpdateDto, WebhookCreateDto } from "../../dto";
 import { AppManagerInterface, Pagination } from "../../interface";
 import { AppModel } from "../../model";
-import { JSONValue } from "../core";
-import prisma from "@/lib/prisma";
 import { NotFoundError } from "../core/response";
+import { StorageInterface } from "@/service/interface/storage.interface";
+import { webhookTypeToInt } from "@/service/core/enum";
 
-export const AppSupabaseSchema = AppCreateSchema.extend({
+export const AppPrismaSchema = AppCreateSchema.extend({
   id: z.number(),
   icon: z.string().optional().default(""),
   createdAt: z.string().datetime({ offset: true }),
   updatedAt: z.string().datetime({ offset: true }),
 });
 
+type AppPrismaType = {
+  id: number;
+  name: string;
+  slug: string;
+  icon?: {
+    path: string;
+  } | null | undefined;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export class AppManagerService implements AppManagerInterface {
 
-  constructor() { }
+  constructor(private readonly storage: StorageInterface) { }
 
-  toModel(json: JSONValue | undefined): AppModel {
-    const data = AppSupabaseSchema.parse(json);
+  toModel(data: AppPrismaType): AppModel {
     const model = new AppModel();
-    model.fullfill(data);
     model.id = data.id.toString();
+    model.name = data.name;
+    model.slug = data.slug;
+    model.createdAt = data.createdAt;
+    model.updatedAt = data.updatedAt;
     return model;
   }
 
@@ -32,12 +46,7 @@ export class AppManagerService implements AppManagerInterface {
         slug: app.slug,
       }
     });
-    const model = new AppModel();
-    model.name = data.name;
-    model.slug = data.slug;
-    model.createdAt = data.createdAt;
-    model.updatedAt = data.updatedAt;
-    return model;
+    return this.toModel(data);
   }
 
   async getAppList(page = 1, perPage = 10): Promise<Pagination<AppModel>> {
@@ -49,15 +58,11 @@ export class AppManagerService implements AppManagerInterface {
       }
     });
     const total = await prisma.application.count();
-    return { total, data: data.map((json) => {
-      const model = new AppModel();
-      model.name = json.name;
-      model.slug = json.slug;
-      model.icon = json.icon?.path || '';
-      model.createdAt = json.createdAt;
-      model.updatedAt = json.updatedAt;
-      return model;        
-    }) };
+    return {
+      total, data: data.map((json) => {
+        return this.toModel(json);
+      })
+    };
   }
 
   async getApp(id: string): Promise<AppModel> {
@@ -72,13 +77,7 @@ export class AppManagerService implements AppManagerInterface {
     if (!data) {
       throw new NotFoundError();
     }
-    const model = new AppModel();
-    model.name = data.name;
-    model.slug = data.slug;
-    model.icon = data.icon?.path || '';
-    model.createdAt = data.createdAt;
-    model.updatedAt = data.updatedAt;
-    return model;
+    return this.toModel(data);
   }
 
   async getAppBySlug(slug: string): Promise<AppModel> {
@@ -93,13 +92,7 @@ export class AppManagerService implements AppManagerInterface {
     if (!data) {
       throw new NotFoundError();
     }
-    const model = new AppModel();
-    model.name = data.name;
-    model.slug = data.slug;
-    model.icon = data.icon?.path || '';
-    model.createdAt = data.createdAt;
-    model.updatedAt = data.updatedAt;
-    return model;
+    return this.toModel(data);
   }
 
   async updateApp(id: string, app: AppUpdateDto): Promise<Date> {
@@ -123,7 +116,27 @@ export class AppManagerService implements AppManagerInterface {
   }
 
   async updateIcon(id: string, data: FormData): Promise<string> {
-    return '';
+    const file: File | null = data.get('file') as unknown as File;
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    const resp = await this.storage.upload(`/apps/${id}/${file.name}`, file.name, buffer, file.type, 'Public');
+
+    await prisma.application.update({
+      where: {
+        id: parseInt(id),
+      },
+      data: {
+        icon: {
+          create: {
+            name: resp.name,
+            path: resp.url, 
+            size: file.size,           
+          }
+        }
+      }
+    });
+
+    return resp.url;
   }
 
   async updateIconBySlug(slug: string, data: FormData): Promise<string> {
@@ -150,5 +163,20 @@ export class AppManagerService implements AppManagerInterface {
   }
 
   async setWebhook(slug: string, webhook: WebhookCreateDto): Promise<void> {
+    const app = await this.getAppBySlug(slug);
+    await prisma.application.update({
+      where: {
+        id: parseInt(app.id),
+      },
+      data: {
+        webhook: {
+          create: {
+            name: webhook.name || "webhook",
+            type: webhookTypeToInt(webhook.type),
+            config: {},
+          }
+        }
+      }
+    });
   }
 }

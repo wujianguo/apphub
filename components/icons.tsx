@@ -4,7 +4,10 @@ import {
   SunMedium,
   Twitter,
   Laptop,
-  PlusCircle
+  PlusCircle,
+  Menu,
+  UploadCloud,
+  BookOpenText,
   // type Icon as LucideIcon,
 } from "lucide-react"
 
@@ -16,6 +19,9 @@ export const Icons = {
   twitter: Twitter,
   laptop: Laptop,
   plus: PlusCircle,
+  menu: Menu,
+  upload: UploadCloud,
+  docs: BookOpenText,
   logo: (props: LucideProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>
       <path

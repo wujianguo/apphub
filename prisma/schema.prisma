@@ -35,9 +35,9 @@ model Release {
   description            String
   commitId               String
   minimumPlatformVersion String
-  platform               PlatformType
-  releaseType            ReleaseType
-  buildType              BuildType
+  platformType           Int
+  releaseType            Int
+  buildType              Int
   file                   File        @relation("Files", fields: [fileId], references: [id], onDelete: Cascade)
   fileId                 Int
   icon                   File?       @relation("Icons", fields: [iconId], references: [id], onDelete: SetNull)
@@ -48,12 +48,14 @@ model Release {
   applicationId          Int
   createdAt              DateTime    @default(now())
   updatedAt              DateTime    @default(now())
+
+  @@index([applicationId, index, platformType], name: "application_index")
 }
 
 model Webhook {
   id           Int           @id @default(autoincrement())
   name         String
-  type         String
+  type         Int
   config       Json
   applications Application[]
   createdAt    DateTime      @default(now())
@@ -71,25 +73,4 @@ model File {
   Symbols   Release[]     @relation("Symbols")
   createdAt DateTime      @default(now())
   updatedAt DateTime      @default(now())
-}
-
-enum PlatformType {
-  IOS
-  ANDROID
-  MACOS
-  TVOS
-  LINUX
-  WINDOWS
-}
-
-enum ReleaseType {
-  ALPHA
-  BETA
-  RC
-  RELEASE
-}
-
-enum BuildType {
-  DEBUG
-  RELEASE
 }
