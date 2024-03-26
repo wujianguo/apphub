@@ -3,12 +3,12 @@ import { type NextRequest } from 'next/server';
 import { getAppManager, getReleaseService } from "@/service/index";
 import { ReleaseCreateSchema } from "@/service/dto";
 import { exceptionHandler } from "@/lib/exception";
-import { Platform } from '@/service/core/enum';
+import { PlatformType } from '@/service/core/enum';
 
 const PaginationPlatformSchema = z.object({
   page: z.coerce.number().default(1),
   perPage: z.coerce.number().default(10),
-  platform: z.nativeEnum(Platform).optional(),
+  platform: z.nativeEnum(PlatformType).optional(),
 });
 
 async function getReleaseList(req: NextRequest, { params }: { params: { slug: string } }) {
