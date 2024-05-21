@@ -1,15 +1,27 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
-import { appManagerService } from "@/service"
+import { useAppList } from "@/hooks/use-app-list"
+import { CreateAppButton } from "./components/create-app"
 
-export default async function IndexPage() {
-  const apps = await appManagerService.getAppList(1, 100);
+export default function IndexPage() {
+  const { data, error, isLoading } = useAppList()
+  if (error) {
+    return <div>Error loading apps</div>
+  }
+  if (isLoading) {
+    return <div>Loading apps...</div>
+  }
+  const apps = data
+  // const apps = await appManagerService.getAppList(1, 100);
   return (
     <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
+      <CreateAppButton />
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {apps &&
-          apps.data.map((app) => (
+          apps.map((app) => (
             <Link key={app.slug} href={`/d/${app.slug}`}>
               <Card>
                 <CardContent className="p-3">

@@ -36,6 +36,13 @@ export class NotFoundError extends HTTPError {
   }
 }
 
+export class UnauthorizedError extends HTTPError {
+  constructor() {
+    super(401, 'Unauthorized', 401);
+    this.name = 'UnauthorizedError';
+  }
+}
+
 export async function exceptionHandler(handler: Function, ...args: any[]) {
   try {
     return await handler(...args);

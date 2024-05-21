@@ -6,6 +6,8 @@ import {
   PlusCircle,
   Menu,
   UploadCloud,
+  CircleCheck,
+  CircleX,
   // type Icon as LucideIcon,
 } from "lucide-react"
 
@@ -18,6 +20,8 @@ export const Icons = {
   plus: PlusCircle,
   menu: Menu,
   upload: UploadCloud,
+  check: CircleCheck,
+  error: CircleX,
   logo: (props: LucideProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>
       <path

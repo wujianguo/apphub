@@ -4,6 +4,7 @@ import { AppCreateDto, AppCreateSchema, AppUpdateDto, Pagination } from "./dto";
 import { AppModel } from "./model";
 import { StorageService } from "./storage.service";
 import { NotFoundError } from "@/lib/exception";
+import { AppMemberRole, appMemberRoleToInt } from "./dto/enum";
 
 export const AppPrismaSchema = AppCreateSchema.extend({
   id: z.number(),
@@ -25,7 +26,7 @@ type AppPrismaType = {
 
 export class AppManagerService {
 
-  constructor(private readonly storage: StorageService) { }
+  constructor(private readonly userId: string, private readonly storage: StorageService) { }
 
   toModel(data: AppPrismaType): AppModel {
     const model = new AppModel();
@@ -38,44 +39,79 @@ export class AppManagerService {
   }
 
   async createApp(app: AppCreateDto): Promise<AppModel> {
-    const data = await prisma.application.create({
+    const data = await prisma.appMember.create({
       data: {
-        name: app.name,
-        slug: app.slug,
+        user: {
+          connect: {
+            id: this.userId,
+          }
+        },
+        role: appMemberRoleToInt(AppMemberRole.Owner),
+        application: {
+          create: {
+            name: app.name,
+            slug: app.slug,
+          }
+        }
+      },
+      include: {
+        application: {
+          include: {
+            icon: true,
+          }
+        }
       }
     });
-    return this.toModel(data);
+    return this.toModel(data.application);
   }
 
-  async getAppList(page = 1, perPage = 10): Promise<Pagination<AppModel>> {
-    const data = await prisma.application.findMany({
+  async getAppList(page = 1, perPage = 100): Promise<Pagination<AppModel>> {
+    const data = await prisma.appMember.findMany({
+      where: {
+        userId: this.userId,
+      },
       take: perPage,
       skip: (page - 1) * perPage,
       include: {
-        icon: true,
+        application: {
+          include: {
+            icon: true,
+          }
+        }
       }
     });
-    const total = await prisma.application.count();
+    const total = await prisma.appMember.count({
+      where: {
+        userId: this.userId,
+      }
+    });
     return {
       total, data: data.map((json) => {
-        return this.toModel(json);
+        return this.toModel(json.application);
       })
     };
   }
 
   async getApp(id: string): Promise<AppModel> {
-    const data = await prisma.application.findUnique({
+    const data = await prisma.appMember.findUnique({
       where: {
-        id: id,
+        userId_applicationId: {
+          userId: this.userId,
+          applicationId: id,
+        }
       },
       include: {
-        icon: true,
+        application: {
+          include: {
+            icon: true,
+          }
+        }
       }
     });
     if (!data) {
       throw new NotFoundError();
     }
-    return this.toModel(data);
+    return this.toModel(data.application);
   }
 
   async getAppBySlug(slug: string): Promise<AppModel> {
@@ -83,17 +119,30 @@ export class AppManagerService {
       where: {
         slug,
       },
-      include: {
-        icon: true,
-      }
     });
     if (!data) {
       throw new NotFoundError();
     }
-    return this.toModel(data);
+    return this.getApp(data.id);
   }
 
   async updateApp(id: string, app: AppUpdateDto): Promise<Date> {
+    await prisma.appMember.update({
+      where: {
+        userId_applicationId: {
+          userId: this.userId,
+          applicationId: id,
+        },
+        role: {
+          in: [appMemberRoleToInt(AppMemberRole.Owner), appMemberRoleToInt(AppMemberRole.Manager)],
+        },
+      },
+      data: {
+        application: {
+          update: app,
+        }
+      }
+    });
     const data = await prisma.application.update({
       where: {
         id: id,
@@ -104,16 +153,33 @@ export class AppManagerService {
   }
 
   async updateAppBySlug(slug: string, app: AppUpdateDto): Promise<Date> {
-    const data = await prisma.application.update({
+    const data = await prisma.application.findUnique({
       where: {
         slug,
       },
-      data: app,
     });
-    return data.updatedAt;
+    if (!data) {
+      throw new NotFoundError();
+    }
+    return this.updateApp(data.id, app);
   }
 
   async updateIcon(id: string, data: FormData): Promise<string> {
+    const app = await prisma.appMember.findUnique({
+      where: {
+        userId_applicationId: {
+          userId: this.userId,
+          applicationId: id,
+        },
+        role: {
+          in: [appMemberRoleToInt(AppMemberRole.Owner), appMemberRoleToInt(AppMemberRole.Manager)],
+        },
+      }
+    });
+    if (!app) {
+      throw new NotFoundError();
+    }
+
     const file: File | null = data.get('file') as unknown as File;
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
@@ -138,11 +204,32 @@ export class AppManagerService {
   }
 
   async updateIconBySlug(slug: string, data: FormData): Promise<string> {
-    const app = await this.getAppBySlug(slug);
+    const app = await prisma.application.findUnique({
+      where: {
+        slug,
+      },
+    });
+    if (!app) {
+      throw new NotFoundError();
+    }
     return await this.updateIcon(app.id, data);
   }
 
   async deleteApp(id: string): Promise<boolean> {
+    const app = await prisma.appMember.findUnique({
+      where: {
+        userId_applicationId: {
+          userId: this.userId,
+          applicationId: id,
+        },
+        role: {
+          equals: appMemberRoleToInt(AppMemberRole.Owner),
+        },
+      }
+    });
+    if (!app) {
+      throw new NotFoundError();
+    }
     await prisma.application.delete({
       where: {
         id: id,
@@ -152,6 +239,14 @@ export class AppManagerService {
   }
 
   async deleteAppBySlug(slug: string): Promise<boolean> {
+    const app = await prisma.application.findUnique({
+      where: {
+        slug,
+      },
+    });
+    if (!app) {
+      throw new NotFoundError();
+    }
     await prisma.application.delete({
       where: {
         slug,
