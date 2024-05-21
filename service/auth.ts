@@ -6,7 +6,9 @@ import Resend from "next-auth/providers/resend"
 import type { Provider } from "next-auth/providers"
 import prisma from "@/lib/prisma"
 
-const providers: Provider[] = [Resend, GitHub, GitLab]
+const providers: Provider[] = [Resend({
+  from: process.env.AUTH_RESEND_FROM,
+}), GitHub, GitLab]
 
 export const { signIn, signOut, auth, handlers } = NextAuth({
   adapter: PrismaAdapter(prisma),
