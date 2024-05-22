@@ -8,6 +8,8 @@ import {
   UploadCloud,
   CircleCheck,
   CircleX,
+  User,
+  LogOut,
   // type Icon as LucideIcon,
 } from "lucide-react"
 
@@ -22,6 +24,8 @@ export const Icons = {
   upload: UploadCloud,
   check: CircleCheck,
   error: CircleX,
+  user: User,
+  logout: LogOut,
   logo: (props: LucideProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>
       <path
