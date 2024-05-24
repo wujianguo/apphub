@@ -1,6 +1,11 @@
 import NextAuth from "next-auth"
 import authConfig from "./service/auth.config"
-// import { type NextRequest } from "next/server";
+// import { NextRequest } from "next/server";
+// import { NextApiRequest } from "next";
+// import { NextAuthRequest } from "next-auth/internals/utils";
+// import { NextAuthOptions } from "next-auth";
+// import NextAuth from "next-auth";
+import { type NextRequest } from "next/server";
 
  
 // export const { auth as middleware } = NextAuth(authConfig)
@@ -24,7 +29,22 @@ const DEFAULT_LOGIN_REDIRECT = "/apps";
 
 const { auth } = NextAuth(authConfig);
 
-export default auth((req) => {
+interface AuthMiddlewareRequest {
+  auth?: any;
+  nextUrl: URL;
+}
+
+interface AuthMiddlewareOptions {
+  publicRoutes: string[];
+  authRoutes: string[];
+  apiAuthPrefix: string;
+  DEFAULT_LOGIN_REDIRECT: string;
+}
+
+export default function authMiddleware(
+  req: AuthMiddlewareRequest,
+  options: AuthMiddlewareOptions
+): Response | null {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
@@ -38,7 +58,7 @@ export default auth((req) => {
 
   if (isAuthRoute) {
     if (isLoggedIn) {
-      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
+      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
     return null;
   }
@@ -51,15 +71,31 @@ export default auth((req) => {
 
     const encodedCallbackUrl = encodeURIComponent(callbackUrl);
 
-    return Response.redirect(new URL(
-      `/api/auth/signin?callbackUrl=${encodedCallbackUrl}`,
-      nextUrl
-    ));
+    return Response.redirect(
+      new URL(`/api/auth/signin?callbackUrl=${encodedCallbackUrl}`, nextUrl)
+    );
   }
 
   return null;
+}
 
-});
+// const publicRoutes: string[] = [
+//   "/",
+//   "/docs"
+// ];
+// const authRoutes: string[] = [
+//   "/auth/login",
+//   "/auth/register",
+//   "/auth/error",
+//   "/auth/reset",
+//   "/auth/new-password"
+// ];
+// const apiAuthPrefix: string = "/api/auth";
+// const DEFAULT_LOGIN_REDIRECT: string = "/apps";
+// const authConfig: NextAuthOptions = {}; // Replace with your actual auth config
+// const { auth } = NextAuth(authConfig);
+
+// export default authMiddleware;
 
 // Optionally, don't invoke Middleware on some paths
 export const config = {
