@@ -6,7 +6,7 @@ export const AppCreateSchema = z.object({
 });
 export const AppUpdateSchema = AppCreateSchema.partial();
 export const AppResponseSchema = AppCreateSchema.extend({
-  icon: z.string().default(''),
+  icon: z.string(),
   createdAt: z.string().datetime({ offset: true }),
   updatedAt: z.string().datetime({ offset: true }),
 });

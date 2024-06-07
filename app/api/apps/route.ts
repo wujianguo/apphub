@@ -12,9 +12,10 @@ const PaginationSchema = z.object({
   perPage: z.coerce.number().default(10),
 });
 
-async function getAppList(req: NextAuthRequest): Promise<NextResponse> {
-  const userId = req.auth?.user?.id;
-  if (!req.auth || !userId) {
+async function getAppList(req: NextRequest): Promise<NextResponse> {
+  const session = await auth()
+  const userId = session?.user?.id
+  if (!userId) {
     throw new UnauthorizedError();
   }
   const searchParams = req.nextUrl.searchParams;
@@ -27,9 +28,10 @@ async function getAppList(req: NextAuthRequest): Promise<NextResponse> {
   return NextResponse.json(apps.data.map((app) => app.dto()));
 }
 
-async function createApp(req: NextAuthRequest) {
-  const userId = req.auth?.user?.id;
-  if (!req.auth || !userId) {
+async function createApp(req: NextRequest) {
+  const session = await auth()
+  const userId = session?.user?.id
+  if (!userId) {
     throw new UnauthorizedError();
   }
   const body = await req.json();
@@ -41,6 +43,6 @@ export async function GET(req: NextApiRequest) {
   return await exceptionHandler(getAppList, req);
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextApiRequest) {
   return await exceptionHandler(createApp, req);
 }

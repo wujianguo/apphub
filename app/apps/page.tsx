@@ -22,7 +22,7 @@ export default function IndexPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {apps &&
           apps.map((app) => (
-            <Link key={app.slug} href={`/d/${app.slug}`}>
+            <Link key={app.slug} href={`/apps/${app.slug}`}>
               <Card>
                 <CardContent className="p-3">
                   <div className="container flex p-3 pl-1">

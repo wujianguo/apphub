@@ -17,4 +17,18 @@ export default {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) {
+        return { ...token, id: user.id };
+      }
+      return token;
+    },
+    session: async ({ session, token }) => {
+      if (session?.user && token.id) {
+        session.user.id = `${token.id}`;
+      }
+      return session;
+    },
+  },
 } satisfies NextAuthConfig

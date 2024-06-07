@@ -3,18 +3,22 @@ import { FormSuccess } from "@/components/form-success";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { AppCreateSchema } from "@/service/dto";
 import { useState, useTransition } from "react";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { createApp } from "@/requests/client";
+import { useRouter } from "next/navigation";
 
 export function CreateAppForm() {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
+
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof AppCreateSchema>>({
     resolver: zodResolver(AppCreateSchema),
@@ -29,6 +33,11 @@ export function CreateAppForm() {
     setSuccess("");
 
     startTransition(() => {
+      createApp(values).then((response) => {
+        router.push(`/apps/${response.slug}`);
+      }).catch((error) => {
+        setError(error.message);
+      });
     });
   };
   return (
@@ -85,7 +94,6 @@ export function CreateAppForm() {
                     )}
                   />
                 </>
-
               </div>
               <FormError message={error} />
               <FormSuccess message={success} />
@@ -109,7 +117,7 @@ export function CreateAppButton() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
+        <Button variant="outline">Add new app</Button>
       </DialogTrigger>
       <DialogContent className="w-auto border-none bg-transparent p-0">
         <CreateAppForm />
