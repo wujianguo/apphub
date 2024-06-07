@@ -39,10 +39,10 @@ async function createApp(req: NextRequest) {
   return Response.json(app.dto(), { status: 201 });
 }
 
-export async function GET(req: NextApiRequest) {
+export async function GET(req: Request) {
   return await exceptionHandler(getAppList, req);
 }
 
-export async function POST(req: NextApiRequest) {
+export async function POST(req: Request) {
   return await exceptionHandler(createApp, req);
 }
