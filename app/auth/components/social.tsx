@@ -3,9 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 
-export type SocialTypes = "google" | "github" | "gitlab"; 
+export type SocialTypes = "google" | "github" | "gitlab";
 
-export function SocialButtons(props: { socialTypes: SocialTypes[], onClick: (provider: SocialTypes) => void } ) {
+export function SocialButtons(props: { socialTypes: SocialTypes[], onClick: (provider: SocialTypes) => void }) {
 
   const socialIcons = (provider: SocialTypes) => {
     switch (provider) {
@@ -29,11 +29,20 @@ export function SocialButtons(props: { socialTypes: SocialTypes[], onClick: (pro
   }
 
   return (
-    <div className="grid grid-cols-2 gap-6">
+    // <div className="grid grid-cols-2 gap-6">
+    //   {props.socialTypes.map((provider) => (
+    //     <Button key={provider} variant="outline" onClick={() => props.onClick(provider)}>
+    //       {socialIcons(provider)}
+    //       {provider.charAt(0).toUpperCase() + provider.slice(1)}
+    //     </Button>
+    //   ))}
+    // </div>
+
+    <div className="grid grid-cols-1 gap-6">
       {props.socialTypes.map((provider) => (
-        <Button key={provider} variant="outline" onClick={() => props.onClick(provider)}>
+        <Button key={provider} variant="outline" size={"lg"} onClick={() => props.onClick(provider)}>
           {socialIcons(provider)}
-          {provider.charAt(0).toUpperCase() + provider.slice(1)}
+          Continue with {provider.charAt(0).toUpperCase() + provider.slice(1)}
         </Button>
       ))}
     </div>

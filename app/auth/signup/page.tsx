@@ -13,7 +13,7 @@ export default function LoginPage() {
     <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
       <Card className="mx-auto w-[400px] max-w-sm border-0">
         <CardHeader>
-          <CardTitle className="text-center text-2xl">Log in to AppHub</CardTitle>
+          <CardTitle className="text-center text-2xl">Create an account</CardTitle>
           {/* <CardDescription>
             Enter your email below to login to your account
           </CardDescription> */}
@@ -25,9 +25,9 @@ export default function LoginPage() {
             }} />
           </div>
           <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <Link href={{ pathname: "/auth/signup", query: { callbackUrl } }} className="underline">
-              Sign up
+            Already have an account?{" "}
+            <Link href={{ pathname: "/auth/login", query: { callbackUrl } }} className="underline">
+              Log in
             </Link>
           </div>
         </CardContent>
