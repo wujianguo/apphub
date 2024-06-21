@@ -11,7 +11,7 @@ export default function LoginPage() {
   const callbackUrl = searchParams.get("callbackUrl");
   return (
     <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
-      <Card className="mx-auto w-[400px] max-w-sm border-0">
+      <Card className="mx-auto max-w-sm border-0 md:w-[400px]">
         <CardHeader>
           <CardTitle className="text-center text-2xl">Create an account</CardTitle>
           {/* <CardDescription>

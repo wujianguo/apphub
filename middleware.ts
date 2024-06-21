@@ -8,7 +8,7 @@ const publicRoutes = [
 
 const authRoutes = [
   "/auth/login",
-  "/auth/signup",
+  "/auth/register",
   "/auth/error",
   "/auth/reset",
   "/auth/new-password"

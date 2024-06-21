@@ -21,9 +21,9 @@ export function SocialButtons(props: { socialTypes: SocialTypes[], onClick: (pro
   if (props.socialTypes.length === 0) return null;
   if (props.socialTypes.length === 1) {
     return (
-      <Button variant="outline" onClick={() => props.onClick(props.socialTypes[0])}>
+      <Button variant="outline" size={"lg"} onClick={() => props.onClick(props.socialTypes[0])}>
         {socialIcons(props.socialTypes[0])}
-        {props.socialTypes[0].charAt(0).toUpperCase() + props.socialTypes[0].slice(1)}
+        Continue with {props.socialTypes[0].charAt(0).toUpperCase() + props.socialTypes[0].slice(1)}
       </Button>
     );
   }
