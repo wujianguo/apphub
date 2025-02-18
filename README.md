@@ -69,4 +69,4 @@ Inspired by
 
 ## License
 
-This project is licensed under the [GPL-3.0 license](https://opensource.org/licenses/GPL-3.0) - see the [`LICENSE`](LICENSE.md) file for details.
+This project is licensed under the [MIT license](https://opensource.org/licenses/MIT) - see the [`LICENSE`](LICENSE.md) file for details.
