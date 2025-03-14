@@ -121,7 +121,7 @@ importers:
   apps/web:
     dependencies:
       '@daveyplate/better-auth-ui':
-        specifier: ^1.2.32
+        specifier: ^1.2.17
         version: 1.2.32(kknliz4fer6fnj2t2wfzrmfkbu)
       '@hookform/resolvers':
         specifier: ^3.9.1
