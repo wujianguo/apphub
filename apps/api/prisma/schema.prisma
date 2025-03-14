@@ -1,0 +1,288 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+  sessions      Session[]
+  accounts      Account[]
+
+  twoFactorEnabled Boolean?
+  username         String?
+  displayUsername  String?
+  apikeys          Apikey[]
+  members          Member[]
+  invitations      Invitation[]
+  twofactors       TwoFactor[]
+
+  @@unique([email])
+  @@map("user")
+  @@unique([username])
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  activeOrganizationId String?
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}
+
+model Apikey {
+  id                  String    @id
+  name                String?
+  start               String?
+  prefix              String?
+  key                 String
+  userId              String
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refillInterval      Int?
+  refillAmount        Int?
+  lastRefillAt        DateTime?
+  enabled             Boolean?
+  rateLimitEnabled    Boolean?
+  rateLimitTimeWindow Int?
+  rateLimitMax        Int?
+  requestCount        Int?
+  remaining           Int?
+  lastRequest         DateTime?
+  expiresAt           DateTime?
+  createdAt           DateTime
+  updatedAt           DateTime
+  permissions         String?
+  metadata            String?
+
+  @@map("apikey")
+}
+
+model Organization {
+  id          String               @id
+  name        String
+  slug        String?
+  logo        String?
+  createdAt   DateTime
+  metadata    String?
+  members     Member[]
+  invitations Invitation[]
+  applications Application[]
+  setting     OrganizationSetting?
+
+  teams Team[]
+
+  @@unique([slug])
+  @@map("organization")
+}
+
+model Member {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           String
+  createdAt      DateTime
+
+  teamId String?
+
+  @@map("member")
+}
+
+model Invitation {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  email          String
+  role           String?
+  status         String
+  expiresAt      DateTime
+  inviterId      String
+  user           User         @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+
+  teamId String?
+
+  @@map("invitation")
+}
+
+model TwoFactor {
+  id          String   @id
+  secret      String
+  backupCodes String
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@map("twoFactor")
+}
+
+model Team {
+  id             String       @id
+  name           String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime
+  updatedAt      DateTime?
+
+  @@map("team")
+}
+
+model StorageConfig {
+  id        String  @id
+  provider  String
+  config    Json?
+  accessURL String?
+
+  createdAt DateTime @default(now())
+
+  setting OrganizationSetting?
+
+  @@map("storage")
+}
+
+model OrganizationSetting {
+  id             String       @id
+  organizationId String       @unique
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  storageId      String       @unique
+  storage        StorageConfig?     @relation(fields: [storageId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+
+  @@map("organizationSetting")
+}
+
+model File {
+  id        String   @id
+  path      String
+  size      Int
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  applications Application[]
+
+  releaseFiles Release[]  @relation("releaseFile")
+  releaseIcons Release[]  @relation("releaseIcon")
+
+  @@map("file")
+}
+
+model Application {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String
+  description    String
+  slug           String
+  logoId         String
+  logo           File         @relation(fields: [logoId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+
+  distributeTypes DistributeType[]
+  stores StoreConifg[]
+  releases Release[]
+
+  @@map("application")
+}
+
+model DistributeType {
+  id            String      @id
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  // Store, Production, Enterprise, Beta, Alpha, Custom ...
+  name          String
+  createdAt     DateTime    @default(now())
+
+  @@map("distributeType")
+}
+
+model StoreConifg {
+  id               String      @id
+  applicationId    String
+  application      Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  // AppStore, GooglePlay
+  name             String
+  bundleIdentifier String
+  channel          String
+  config           Json?
+  createdAt        DateTime    @default(now())
+
+  @@map("storeConfig")
+}
+
+model Release {
+  id               String      @id
+  applicationId    String
+  application      Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  name             String
+  fingerprint      String
+  version          String
+  shortVersion     String
+  bundleIdentifier String
+  description      String
+  commit           String
+  // iOS, Android, Linux, HarmonyOS, Windows, macOS, tvOS, ...
+  platform         String
+  // Release, Debug, ...
+  buildType        String
+  fileId           String
+  file             File @relation(fields: [fileId], references: [id], onDelete: Cascade, name: "releaseFile")
+  iconId           String
+  icon             File @relation(fields: [iconId], references: [id], onDelete: Cascade, name: "releaseIcon")
+
+  createdAt DateTime @default(now())
+}

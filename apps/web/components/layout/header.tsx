@@ -6,7 +6,9 @@ import { Menu, X } from "lucide-react";
 import { siteConfig } from "@/config/site"
 import { Button, buttonVariants } from "@repo/ui/components/button"
 import { Icons } from "../icons"
-import { UserButton } from "@/components/user//user-button"
+// import { UserButton } from "@/components/user//user-button"
+import { UserButton } from "@daveyplate/better-auth-ui";
+
 
 interface NavItem {
   title: string
