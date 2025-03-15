@@ -1,72 +1,36 @@
-# AppHub
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-🙋‍♀️ A self-hosted service that helps you distribute Android, iOS, macOS, tvOS, Linux, Windows apps, you can release builds to testers and public app stores.
+## Getting Started
 
-## Features
+First, run the development server:
 
-- [ ] Manage app distribution across multiple platforms all in one place.
-    - [ ] iOS
-    - [ ] Android
-    - [ ] Windows
-    - [ ] Linux
-    - [ ] macOS
-- [ ] Release builds to testers.
-- [ ] Release builds to the public app stores.
-    - [ ] Google Play
-    - [ ] App Store
-- [ ] Get the app's version status of the public app stores.
-    - [ ] Google Play
-    - [ ] App Store
-- [ ] Manage tester's iOS devices.
-- [ ] Integrate(webhook, login) AppHub with other applications.
-    - [ ] Slack
-    - [ ] Microsoft Teams
-    - [ ] Feishu(Lark)
-    - [ ] DingTalk
-    - [ ] Wecom
-    - [ ] GitLab
-    - [ ] GitHub
-- [ ] Multiple database options
-    - [ ] Sqlite
-    - [ ] MySQL
-    - [ ] PostgreSQL
-    - [ ] [Supabase](https://supabase.com/)
-    - [ ] [Parse](https://parseplatform.org/)
-- [ ] Multiple storage options
-    - [ ] Amazon AWS S3
-    - [ ] Azure Blob Storage
-    - [ ] Google Cloud Storage
-    - [ ] Alibaba Cloud OSS
-    - [ ] Tencent COS
-- [ ] Multiple deploy options
-    - [ ] Manual
-    - [ ] Docker
-    - [ ] Amazon AWS Lambda
-    - [ ] Azure serverless
-    - [ ] Google Cloud Run
-    - [ ] Vercel
-    - [ ] Alibaba Cloud Serverless
-    - [ ] Tencent Serverless
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-## Configuration
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## Deploy
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Learn More
 
-## Community
+To learn more about Next.js, take a look at the following resources:
 
-Have a question or an issue about AppHub? Create an [issue](https://github.com/wujianguo/apphub/issues/new)!
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-Interested in contributing to AppHub? Click here to join our [Slack](https://join.slack.com/t/apphubhq/shared_invite/zt-1e7q6xcqc-8N61BMQUeCPwh3TrJvfRSw).
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Credits
+## Deploy on Vercel
 
-Inspired by
-- [App Center](http://appcenter.ms/)
-- [Zealot](https://github.com/tryzealot/zealot)
-- [蒲公英](https://www.pgyer.com/)
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-## License
-
-This project is licensed under the [MIT license](https://opensource.org/licenses/MIT) - see the [`LICENSE`](LICENSE.md) file for details.
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
