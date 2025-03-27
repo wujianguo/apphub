@@ -22,7 +22,7 @@ export default function IndexPage() {
           </div>
           <div className="flex gap-4">
             <Link
-              href='teams'
+              href='orgs'
               // target="_blank"
               // rel="noreferrer"
               className={buttonVariants()}

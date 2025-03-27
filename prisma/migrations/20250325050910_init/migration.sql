@@ -150,10 +150,9 @@ CREATE TABLE "team" (
 
 -- CreateTable
 CREATE TABLE "storage" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "provider" TEXT NOT NULL,
     "config" JSONB,
-    "accessURL" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "storage_pkey" PRIMARY KEY ("id")
@@ -161,9 +160,9 @@ CREATE TABLE "storage" (
 
 -- CreateTable
 CREATE TABLE "organizationSetting" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "organizationId" TEXT NOT NULL,
-    "storageId" TEXT NOT NULL,
+    "storageId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "organizationSetting_pkey" PRIMARY KEY ("id")
@@ -171,7 +170,7 @@ CREATE TABLE "organizationSetting" (
 
 -- CreateTable
 CREATE TABLE "file" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "path" TEXT NOT NULL,
     "size" INTEGER NOT NULL,
     "metadata" JSONB,
@@ -182,12 +181,12 @@ CREATE TABLE "file" (
 
 -- CreateTable
 CREATE TABLE "application" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "organizationId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
-    "logoId" TEXT NOT NULL,
+    "logoId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "application_pkey" PRIMARY KEY ("id")
@@ -195,8 +194,8 @@ CREATE TABLE "application" (
 
 -- CreateTable
 CREATE TABLE "distributeType" (
-    "id" TEXT NOT NULL,
-    "applicationId" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
+    "applicationId" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -205,8 +204,8 @@ CREATE TABLE "distributeType" (
 
 -- CreateTable
 CREATE TABLE "storeConfig" (
-    "id" TEXT NOT NULL,
-    "applicationId" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
+    "applicationId" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
     "bundleIdentifier" TEXT NOT NULL,
     "channel" TEXT NOT NULL,
@@ -218,8 +217,8 @@ CREATE TABLE "storeConfig" (
 
 -- CreateTable
 CREATE TABLE "Release" (
-    "id" TEXT NOT NULL,
-    "applicationId" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
+    "applicationId" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
     "fingerprint" TEXT NOT NULL,
     "version" TEXT NOT NULL,
@@ -229,8 +228,8 @@ CREATE TABLE "Release" (
     "commit" TEXT NOT NULL,
     "platform" TEXT NOT NULL,
     "buildType" TEXT NOT NULL,
-    "fileId" TEXT NOT NULL,
-    "iconId" TEXT NOT NULL,
+    "fileId" INTEGER NOT NULL,
+    "iconId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Release_pkey" PRIMARY KEY ("id")

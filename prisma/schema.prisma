@@ -183,10 +183,9 @@ model Team {
 }
 
 model StorageConfig {
-  id        String  @id
+  id   Int     @id @default(autoincrement())
   provider  String
   config    Json?
-  accessURL String?
 
   createdAt DateTime @default(now())
 
@@ -196,18 +195,18 @@ model StorageConfig {
 }
 
 model OrganizationSetting {
-  id             String       @id
+  id             Int       @id @default(autoincrement())
   organizationId String       @unique
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  storageId      String       @unique
-  storage        StorageConfig?     @relation(fields: [storageId], references: [id], onDelete: Cascade)
+  storageId      Int       @unique
+  storage        StorageConfig     @relation(fields: [storageId], references: [id], onDelete: Cascade)
   createdAt      DateTime     @default(now())
 
   @@map("organizationSetting")
 }
 
 model File {
-  id        String   @id
+  id        Int     @id @default(autoincrement())
   path      String
   size      Int
   metadata  Json?
@@ -222,13 +221,13 @@ model File {
 }
 
 model Application {
-  id             String       @id
+  id             Int          @id @default(autoincrement())
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   name           String
   description    String
   slug           String
-  logoId         String
+  logoId         Int
   logo           File         @relation(fields: [logoId], references: [id], onDelete: Cascade)
   createdAt      DateTime     @default(now())
 
@@ -240,8 +239,8 @@ model Application {
 }
 
 model DistributeType {
-  id            String      @id
-  applicationId String
+  id   Int     @id @default(autoincrement())
+  applicationId Int
   application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
   // Store, Production, Enterprise, Beta, Alpha, Custom ...
   name          String
@@ -251,8 +250,8 @@ model DistributeType {
 }
 
 model StoreConifg {
-  id               String      @id
-  applicationId    String
+  id   Int     @id @default(autoincrement())
+  applicationId    Int
   application      Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
   // AppStore, GooglePlay
   name             String
@@ -265,8 +264,8 @@ model StoreConifg {
 }
 
 model Release {
-  id               String      @id
-  applicationId    String
+  id   Int     @id @default(autoincrement())
+  applicationId    Int
   application      Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
   name             String
   fingerprint      String
@@ -279,9 +278,9 @@ model Release {
   platform         String
   // Release, Debug, ...
   buildType        String
-  fileId           String
+  fileId           Int
   file             File @relation(fields: [fileId], references: [id], onDelete: Cascade, name: "releaseFile")
-  iconId           String
+  iconId           Int
   icon             File @relation(fields: [iconId], references: [id], onDelete: Cascade, name: "releaseIcon")
 
   createdAt DateTime @default(now())

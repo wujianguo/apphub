@@ -80,6 +80,24 @@ export const auth = betterAuth({
       teams: {
         enabled: true,
       },
+      organizationCreation: {
+        afterCreate: async ({ organization }) => {
+          await prisma.organizationSetting.create({
+            data: {
+              organization: {
+                connect: {
+                  id: organization.id
+                }
+              },
+              storage: {
+                create: {
+                  provider: 'system'
+                }
+              }
+            }
+          })
+        }
+      }
     }),
     // passkey(),
     twoFactor(),
