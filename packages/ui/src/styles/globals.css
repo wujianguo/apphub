@@ -1,10 +1,14 @@
 @import "tailwindcss";
 
+@source "../../../apps/**/*.{ts,tsx}";
+@source "../../../components/**/*.{ts,tsx}";
+@source "../**/*.{ts,tsx}";
+
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
 
-/* @source "../node_modules/@daveyplate/better-auth-ui"; */
+@source "../../../../apps/web/node_modules/@daveyplate/better-auth-ui";
 
 @theme inline {
   --color-background: var(--background);

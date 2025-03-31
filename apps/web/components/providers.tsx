@@ -1,17 +1,11 @@
 "use client"
 
 import * as React from "react"
-const NextThemesProvider = dynamic(
-	() => import('next-themes').then((e) => e.ThemeProvider),
-	{
-		ssr: false,
-	}
-)
-import dynamic from 'next/dynamic'
+import { ThemeProvider as NextThemesProvider } from "next-themes"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-// import { AuthUIProvider } from "@daveyplate/better-auth-ui"
-// import { authClient } from "@/lib/auth-client"
+import { AuthUIProvider } from "@daveyplate/better-auth-ui"
+import { authClient } from "@/lib/auth-client"
 // import { upload } from "@/lib/storage/client"
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -25,7 +19,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       disableTransitionOnChange
       enableColorScheme
     >
-      {/* <AuthUIProvider
+      <AuthUIProvider
         authClient={authClient}
         navigate={router.push}
         replace={router.replace}
@@ -36,12 +30,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
         magicLink={true}
         avatar
         uploadAvatar={async (file: File) => {
-          const data = await upload(file, file.name, '/api/user/avatar/request');
-          return data.url;
+          return '';
+          // const data = await upload(file, file.name, '/api/user/avatar/request');
+          // return data.url;
       }}
-      > */}
+      >
         {children}
-      {/* </AuthUIProvider> */}
+      </AuthUIProvider>
     </NextThemesProvider>
   )
 }
