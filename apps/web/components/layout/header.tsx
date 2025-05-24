@@ -7,7 +7,7 @@ import { siteConfig } from "@/config/site"
 import { Button, buttonVariants } from "@repo/ui/components/ui/button"
 import { Icons } from "../icons"
 // import { UserButton } from "@/components/user//user-button"
-// import { UserButton } from "@daveyplate/better-auth-ui";
+import { UserButton } from "@daveyplate/better-auth-ui";
 
 
 interface NavItem {
@@ -68,7 +68,7 @@ export function SiteHeader() {
       </div>
 
       <div className="flex items-center gap-3 absolute right-4">
-        {/* <UserButton /> */}
+        <UserButton />
       </div>
     </div>
   );
@@ -125,7 +125,7 @@ export function SiteHeader() {
                 <Icons.github className="size-4" />
                 <span className="sr-only">Github</span>
               </Link>
-              {/* <UserButton /> */}
+              <UserButton />
             </nav>
           </div>
         </div>

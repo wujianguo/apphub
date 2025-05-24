@@ -6,7 +6,8 @@
     "declarationMap": false,
     "paths": {
       "@/*": ["./*"],
-      "@repo/ui/*": ["../../packages/ui/src/*"]
+      "@repo/ui/*": ["../../packages/ui/src/*"],
+      "@repo/api/*": ["../../packages/api/src/*"]
     },
     "plugins": [
       {

@@ -3,5 +3,8 @@
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "./dist",
+    "paths": {
+      "@repo/api/*": ["../../packages/api/src/*"]
+    },
   }
 }

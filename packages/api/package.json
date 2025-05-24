@@ -5,36 +5,14 @@
   "license": "MIT",
   "scripts": {
     "dev": "pnpm build --watch",
-    "build": "tsc -b -v",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\""
-  },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "./dist/**"
-  ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "typesVersions": {
-    "*": {
-      "*": [
-        "src/*"
-      ]
-    }
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --max-warnings 0"
   },
   "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
-    },
-    "./*": {
-      "import": "./dist/*.js",
-      "require": "./dist/*.js"
-    }
+    "./src/*": "./src/**/*.ts"
   },
   "dependencies": {
-    "@nestjs/mapped-types": "*"
+    "@nestjs/mapped-types": "*",
+    "@nestjs/swagger": "^11.2.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

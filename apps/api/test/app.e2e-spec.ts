@@ -1,25 +1,21 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
 import { describe, it, beforeEach } from '@jest/globals';
-import request from 'supertest';
-import { AppModule } from './../src/app.module';
+import { AppContext } from './common/app';
+import { UserClient } from './common/client';
+import { afterEach } from 'node:test';
 
-describe('AppController (e2e)', () => {
-  let app: INestApplication;
+describe('Profile', () => {
+  let context: AppContext;
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
+    context = await new AppContext().build();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+  afterEach(async () => {
+    await context.close();
+  });
+
+  it('get', async () => {
+    const client = new UserClient(context);
+    await client.get('/system/health').expect(200);
   });
 });
